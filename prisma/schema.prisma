@@ -1,0 +1,96 @@
+// Egg Farm data model.
+// Every user-facing text field is stored in both English (En) and Arabic (Ar).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+/// A kind of domestic bird (chicken, duck, quail, ...).
+model Bird {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  nameEn        String
+  nameAr        String
+  descriptionEn String
+  descriptionAr String
+  /// Typical incubation period in days.
+  incubationDays Int
+  sortOrder     Int       @default(0)
+  products      Product[]
+}
+
+/// A hatching-egg listing for a specific breed.
+model Product {
+  id            String      @id @default(cuid())
+  slug          String      @unique
+  birdId        String
+  bird          Bird        @relation(fields: [birdId], references: [id], onDelete: Restrict)
+  breedEn       String
+  breedAr       String
+  descriptionEn String
+  descriptionAr String
+  /// Price of a single egg, in minor currency units (cents).
+  priceCents    Int
+  /// Minimum number of eggs per order line.
+  minOrder      Int         @default(1)
+  /// Eggs currently available.
+  stock         Int         @default(0)
+  /// Expected fertility / hatch rate, in percent.
+  hatchRate     Int         @default(80)
+  /// Egg shell colour used to render the illustration (hex).
+  shellColor    String      @default("#f1e3cf")
+  speckled      Boolean     @default(false)
+  featured      Boolean     @default(false)
+  active        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  orderItems    OrderItem[]
+
+  @@index([birdId])
+  @@index([priceCents])
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  /// Short public reference shown to customers, e.g. EGG-7K3Q9P.
+  code          String      @unique
+  customerName  String
+  phone         String
+  email         String?
+  city          String
+  address       String
+  notes         String?
+  locale        String      @default("en")
+  /// PENDING | CONFIRMED | SHIPPED | DELIVERED | CANCELLED
+  status        String      @default("PENDING")
+  subtotalCents Int
+  shippingCents Int
+  totalCents    Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  items         OrderItem[]
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id             String  @id @default(cuid())
+  orderId        String
+  order          Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId      String
+  product        Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  /// Snapshots so historical orders keep their original names and prices.
+  nameEn         String
+  nameAr         String
+  unitPriceCents Int
+  quantity       Int
+
+  @@index([orderId])
+  @@index([productId])
+}

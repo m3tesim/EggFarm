@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream-50: #fffdf8;
+  --color-cream-100: #fdf8ec;
+  --color-cream-200: #f7eed8;
+  --color-cream-300: #eedfba;
+  --color-yolk-300: #fcd671;
+  --color-yolk-400: #f9c23c;
+  --color-yolk-500: #eea516;
+  --color-yolk-600: #cc800c;
+  --color-meadow-50: #f1f7ee;
+  --color-meadow-100: #dcebd4;
+  --color-meadow-500: #4f8a3c;
+  --color-meadow-600: #3d712e;
+  --color-meadow-700: #315a26;
+  --color-meadow-800: #29481f;
+  --color-meadow-900: #1f3718;
+  --color-bark-500: #8a6a4f;
+  --color-bark-700: #5a4331;
+  --color-bark-900: #2e2219;
+
+  --font-sans: var(--font-geist), var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), var(--font-cairo), ui-serif, Georgia, serif;
+}
+
+/* Arabic uses Cairo for both body and headings. */
+:root[lang="ar"] {
+  --font-sans: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-cream-50);
+  color: var(--color-bark-900);
+}
+
+::selection {
+  background: var(--color-yolk-300);
+}
+
+@utility container-page {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-inline: 1rem;
+  @media (width >= 40rem) {
+    padding-inline: 1.5rem;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 2rem;
+  }
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yolk-500 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@utility btn-primary {
+  @apply btn bg-meadow-700 text-cream-50 shadow-sm hover:bg-meadow-800;
+}
+
+@utility btn-accent {
+  @apply btn bg-yolk-400 text-bark-900 shadow-sm hover:bg-yolk-500;
+}
+
+@utility btn-ghost {
+  @apply btn border border-bark-900/15 bg-white/60 text-bark-900 hover:bg-white;
+}
+
+@utility card {
+  @apply rounded-3xl border border-bark-900/10 bg-white shadow-[0_1px_2px_rgb(46_34_25/0.04),0_8px_24px_-12px_rgb(46_34_25/0.12)];
+}
+
+@utility input {
+  @apply w-full rounded-xl border border-bark-900/15 bg-white px-3.5 py-2.5 text-sm text-bark-900 placeholder:text-bark-500/70 transition outline-none focus:border-meadow-500 focus:ring-4 focus:ring-meadow-500/15 aria-invalid:border-red-500 aria-invalid:ring-red-500/15;
+}
+
+@utility label {
+  @apply mb-1.5 block text-sm font-medium text-bark-700;
+}
