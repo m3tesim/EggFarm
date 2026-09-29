@@ -15,6 +15,7 @@ export type CartProduct = {
   stock: number;
   shellColor: string;
   speckled: boolean;
+  imageUrl: string | null;
 };
 
 export type CartItem = CartProduct & { quantity: number };

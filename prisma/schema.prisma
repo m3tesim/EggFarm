@@ -44,6 +44,10 @@ model Product {
   hatchRate     Int         @default(80)
   /// Egg shell colour used to render the illustration (hex).
   shellColor    String      @default("#f1e3cf")
+  /// Remote photo of the breed (e.g. from Wikimedia Commons).
+  imageUrl      String?
+  /// Page crediting the photo's author and licence.
+  imageSourceUrl String?
   speckled      Boolean     @default(false)
   featured      Boolean     @default(false)
   active        Boolean     @default(true)

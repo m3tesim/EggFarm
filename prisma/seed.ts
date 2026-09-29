@@ -89,11 +89,14 @@ type ProductSeed = {
   shellColor: string;
   speckled?: boolean;
   featured?: boolean;
+  /** File name on Wikimedia Commons (freely licensed photo of the breed). */
+  photo?: string;
 };
 
 const products: ProductSeed[] = [
   {
     slug: "rhode-island-red",
+    photo: "Rhode_Island_Red.jpg",
     bird: "chicken",
     breedEn: "Rhode Island Red",
     breedAr: "رود آيلاند الأحمر",
@@ -110,6 +113,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "araucana",
+    photo: "Aracuana_Henne.JPG",
     bird: "chicken",
     breedEn: "Araucana",
     breedAr: "أراوكانا",
@@ -126,6 +130,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "marans-black-copper",
+    photo: "Poule_Marans_noir_cuivré.jpg",
     bird: "chicken",
     breedEn: "Black Copper Marans",
     breedAr: "ماران النحاسي الأسود",
@@ -142,6 +147,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "leghorn-white",
+    photo: "ARS-White_Leghorn_hen.jpg",
     bird: "chicken",
     breedEn: "White Leghorn",
     breedAr: "ليجهورن الأبيض",
@@ -157,6 +163,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "fayoumi",
+    photo: "Cory's_chickens_09_-_Egyptian_Fayoumi_pullet_(28488787120)_(cropped).jpg",
     bird: "chicken",
     breedEn: "Egyptian Fayoumi",
     breedAr: "الفيومي المصري",
@@ -173,6 +180,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "brahma-light",
+    photo: "Light_Brahma_chicken.JPG",
     bird: "chicken",
     breedEn: "Light Brahma",
     breedAr: "براهما الفاتح",
@@ -188,6 +196,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "pekin-duck",
+    photo: "Pekin_Ducks,_Ford_Park_2-2-14a_(12325344204).jpg",
     bird: "duck",
     breedEn: "Pekin Duck",
     breedAr: "بط بكيني",
@@ -203,6 +212,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "khaki-campbell",
+    photo: "Canard_kaki_Campbell.jpg",
     bird: "duck",
     breedEn: "Khaki Campbell",
     breedAr: "خاكي كامبل",
@@ -217,6 +227,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "muscovy",
+    photo: "Muscovy_Duck_domestic_RWD.jpg",
     bird: "duck",
     breedEn: "Muscovy Duck",
     breedAr: "بط مسكوفي",
@@ -231,6 +242,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "japanese-quail",
+    photo: "Japanese_Quail.jpg",
     bird: "quail",
     breedEn: "Japanese Coturnix Quail",
     breedAr: "السمان الياباني",
@@ -262,6 +274,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "bronze-turkey",
+    photo: "Tom_Turkey_(33152863363).jpg",
     bird: "turkey",
     breedEn: "Standard Bronze Turkey",
     breedAr: "الديك الرومي البرونزي",
@@ -277,6 +290,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "bourbon-red-turkey",
+    photo: "Bourbon_Red_tom_close-up.jpg",
     bird: "turkey",
     breedEn: "Bourbon Red Turkey",
     breedAr: "الديك الرومي بوربون الأحمر",
@@ -292,6 +306,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "toulouse-goose",
+    photo: "Toulouse_Goose_at_Deen_City_Farm,_Merton,_London..jpg",
     bird: "goose",
     breedEn: "Toulouse Goose",
     breedAr: "إوز تولوز",
@@ -306,6 +321,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "egyptian-goose",
+    photo: "Alopochen_aegyptiaca_-_Egyptian_Geese,_Liesbeek_River,_Cape_Town.jpg",
     bird: "goose",
     breedEn: "Egyptian Goose",
     breedAr: "الإوز المصري",
@@ -321,6 +337,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "pearl-guinea",
+    photo: "Helmeted_Guineafowl_(Numida_meleagris).jpg",
     bird: "guinea-fowl",
     breedEn: "Pearl Guinea Fowl",
     breedAr: "الدجاج الغيني اللؤلؤي",
@@ -336,6 +353,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "homing-pigeon",
+    photo: "Racing_Pigeon.jpg",
     bird: "pigeon",
     breedEn: "Racing Homer Pigeon",
     breedAr: "الحمام الزاجل",
@@ -350,6 +368,7 @@ const products: ProductSeed[] = [
   },
   {
     slug: "india-blue-peafowl",
+    photo: "Indian_Peafowl_or_Peacock_(Pavo_cristatus)_(11952911946).jpg",
     bird: "peafowl",
     breedEn: "India Blue Peafowl",
     breedAr: "الطاووس الهندي الأزرق",
@@ -365,6 +384,15 @@ const products: ProductSeed[] = [
   },
 ];
 
+/** Direct, resized image URL plus the Commons page that credits author and licence. */
+function commonsPhoto(file: string) {
+  const name = encodeURIComponent(file);
+  return {
+    imageUrl: `https://commons.wikimedia.org/wiki/Special:FilePath/${name}?width=800`,
+    imageSourceUrl: `https://commons.wikimedia.org/wiki/File:${name}`,
+  };
+}
+
 async function main() {
   const birdIds = new Map<string, string>();
 
@@ -377,9 +405,10 @@ async function main() {
     birdIds.set(bird.slug, saved.id);
   }
 
-  for (const { bird, price, ...product } of products) {
+  for (const { bird, price, photo, ...product } of products) {
     const data = {
       ...product,
+      ...(photo ? commonsPhoto(photo) : { imageUrl: null, imageSourceUrl: null }),
       birdId: birdIds.get(bird)!,
       priceCents: Math.round(price * 100),
     };

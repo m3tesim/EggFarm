@@ -1,6 +1,6 @@
 import { ArrowRight, HeartPulse, PackageCheck, Sprout, Thermometer } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { EggArt } from "@/components/egg-art";
+import { BirdPhoto } from "@/components/bird-photo";
 import { ProductCard } from "@/components/product-card";
 import { Link } from "@/i18n/navigation";
 import { localized } from "@/lib/format";
@@ -20,7 +20,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
     { icon: Thermometer, title: t("why4Title"), text: t("why4Text") },
   ];
 
-  const heroEggs = featured.slice(0, 5);
+  const heroBirds = featured.filter((p) => p.imageUrl).slice(0, 4);
 
   return (
     <>
@@ -45,31 +45,31 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             </div>
           </div>
 
-          <div className="relative mx-auto aspect-square w-full max-w-md" aria-hidden="true">
-            <div className="absolute inset-6 rounded-full bg-yolk-300/50 blur-3xl" />
-            <div className="absolute inset-10 rounded-full border-2 border-dashed border-bark-500/20" />
-            {heroEggs.map((egg, i) => {
-              const angle = (i / heroEggs.length) * Math.PI * 2 - Math.PI / 2;
-              return (
-                <EggArt
-                  key={egg.id}
-                  color={egg.shellColor}
-                  speckled={egg.speckled}
-                  seed={egg.slug}
-                  className="absolute w-[22%]"
-                  style={{
-                    left: `${50 + Math.cos(angle) * 34 - 11}%`,
-                    top: `${50 + Math.sin(angle) * 34 - 14}%`,
-                    rotate: `${(i % 2 ? 1 : -1) * (8 + i * 3)}deg`,
-                  }}
-                />
-              );
-            })}
-            <EggArt
-              color="#f3d9a4"
-              seed="hero-center"
-              className="absolute left-1/2 top-1/2 w-[34%] -translate-x-1/2 -translate-y-1/2"
-            />
+          <div className="relative mx-auto w-full max-w-lg">
+            <div className="absolute inset-8 rounded-full bg-yolk-300/50 blur-3xl" aria-hidden="true" />
+            <div className="relative grid grid-cols-2 gap-4 pb-8">
+              {heroBirds.map((product, i) => (
+                <Link
+                  key={product.id}
+                  href={`/eggs/${product.slug}`}
+                  className={`group relative aspect-[4/5] overflow-hidden rounded-[2rem] border-4 border-white shadow-xl ${
+                    i % 2 === 1 ? "translate-y-8" : ""
+                  }`}
+                >
+                  <BirdPhoto
+                    src={product.imageUrl}
+                    alt={localized(product, "breed", locale)}
+                    priority={i < 2}
+                    sizes="(min-width: 1024px) 240px, 45vw"
+                    fallback={{ color: product.shellColor, speckled: product.speckled, seed: product.slug }}
+                    className="transition duration-500 group-hover:scale-105"
+                  />
+                  <span className="absolute inset-x-2 bottom-2 rounded-full bg-white/85 px-3 py-1 text-center text-xs font-semibold backdrop-blur">
+                    {localized(product, "breed", locale)}
+                  </span>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -88,12 +88,14 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                 href={{ pathname: "/eggs", query: { bird: bird.slug } }}
                 className="card group flex items-center gap-4 p-4 transition hover:border-meadow-500/40 hover:bg-meadow-50"
               >
-                <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-cream-100">
-                  <EggArt
-                    color={sample?.shellColor ?? "#efe2cc"}
-                    speckled={sample?.speckled}
-                    seed={`bird-${bird.slug}`}
-                    className="h-10 transition group-hover:-rotate-12"
+                <span className="relative size-16 shrink-0 overflow-hidden rounded-2xl bg-cream-100">
+                  <BirdPhoto
+                    src={sample?.imageUrl}
+                    alt=""
+                    sizes="64px"
+                    fallback={{ color: sample?.shellColor ?? "#efe2cc", speckled: sample?.speckled, seed: `bird-${bird.slug}` }}
+                    className="transition duration-500 group-hover:scale-110"
+                    eggClassName="h-10"
                   />
                 </span>
                 <span className="min-w-0">

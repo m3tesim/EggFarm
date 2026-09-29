@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useActionState, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { type ProductFormState, saveProduct } from "@/lib/actions/admin";
-import { EggArt } from "../egg-art";
+import { BirdPhoto } from "../bird-photo";
 
 type ProductValues = {
   id?: string;
@@ -20,6 +20,8 @@ type ProductValues = {
   minOrder: number;
   hatchRate: number;
   shellColor: string;
+  imageUrl: string | null;
+  imageSourceUrl: string | null;
   speckled: boolean;
   featured: boolean;
   active: boolean;
@@ -35,6 +37,7 @@ export function ProductForm({ birds, product }: Props) {
   const [state, action, pending] = useActionState<ProductFormState, FormData>(saveProduct, {});
   const [color, setColor] = useState(product?.shellColor ?? "#efe2cc");
   const [speckled, setSpeckled] = useState(product?.speckled ?? false);
+  const [imageUrl, setImageUrl] = useState(product?.imageUrl ?? "");
   const err = (key: keyof NonNullable<ProductFormState["fieldErrors"]>) =>
     state.fieldErrors?.[key] ? true : undefined;
 
@@ -72,6 +75,37 @@ export function ProductForm({ birds, product }: Props) {
           <label className="label" htmlFor="descriptionAr">{t("descriptionAr")}</label>
           <textarea id="descriptionAr" name="descriptionAr" rows={3} required dir="rtl" lang="ar" defaultValue={product?.descriptionAr} className="input" aria-invalid={err("descriptionAr")} />
         </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="label" htmlFor="imageUrl">{t("imageUrl")}</label>
+            <input
+              id="imageUrl"
+              name="imageUrl"
+              type="url"
+              dir="ltr"
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="https://commons.wikimedia.org/wiki/Special:FilePath/…"
+              className="input"
+              aria-invalid={err("imageUrl")}
+              aria-describedby="imageUrl-hint"
+            />
+            <p id="imageUrl-hint" className="mt-1 text-xs text-bark-500">{t("imageHint")}</p>
+          </div>
+          <div>
+            <label className="label" htmlFor="imageSourceUrl">{t("imageSourceUrl")}</label>
+            <input
+              id="imageSourceUrl"
+              name="imageSourceUrl"
+              type="url"
+              dir="ltr"
+              defaultValue={product?.imageSourceUrl ?? ""}
+              placeholder="https://commons.wikimedia.org/wiki/File:…"
+              className="input"
+              aria-invalid={err("imageSourceUrl")}
+            />
+          </div>
+        </div>
         <div className="grid gap-4 sm:grid-cols-4">
           <div>
             <label className="label" htmlFor="price">{t("priceLabel")}</label>
@@ -93,8 +127,17 @@ export function ProductForm({ birds, product }: Props) {
       </div>
 
       <div className="space-y-4">
-        <div className="card grid place-items-center gap-4 p-6">
-          <EggArt color={color} speckled={speckled} seed={product?.slug ?? "new"} className="h-32" />
+        <div className="card grid gap-4 p-4">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-cream-100">
+            <BirdPhoto
+              key={imageUrl}
+              src={imageUrl}
+              alt=""
+              sizes="256px"
+              fallback={{ color, speckled, seed: product?.slug ?? "new" }}
+              eggClassName="h-3/4"
+            />
+          </div>
           <label className="flex w-full items-center justify-between gap-2 text-sm font-medium">
             {t("shellColor")}
             <input type="color" name="shellColor" value={color} onChange={(e) => setColor(e.target.value)} className="h-9 w-14 cursor-pointer rounded-lg border border-bark-900/15" />

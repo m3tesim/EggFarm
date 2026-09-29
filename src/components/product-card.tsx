@@ -3,27 +3,29 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { formatMoney, localized } from "@/lib/format";
 import type { ProductWithBird } from "@/lib/product-utils";
-import { EggArt } from "./egg-art";
+import { BirdPhoto } from "./bird-photo";
 
 export async function ProductCard({ product }: { product: ProductWithBird }) {
   const locale = await getLocale();
   const t = await getTranslations("Product");
   const soldOut = product.stock < product.minOrder;
+  const breed = localized(product, "breed", locale);
+  const bird = localized(product.bird, "name", locale);
 
   return (
     <Link
       href={`/eggs/${product.slug}`}
       className="card group flex flex-col overflow-hidden transition hover:-translate-y-0.5 hover:shadow-lg"
     >
-      <div className="relative grid aspect-[4/3] place-items-center bg-gradient-to-b from-cream-100 to-cream-200">
-        <EggArt
-          color={product.shellColor}
-          speckled={product.speckled}
-          seed={product.slug}
-          className="h-3/5 transition duration-300 group-hover:-rotate-6 group-hover:scale-105"
+      <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-b from-cream-100 to-cream-200">
+        <BirdPhoto
+          src={product.imageUrl}
+          alt={t("photoAlt", { breed, bird })}
+          fallback={{ color: product.shellColor, speckled: product.speckled, seed: product.slug }}
+          className="transition duration-500 group-hover:scale-105"
         />
         <span className="absolute start-3 top-3 rounded-full bg-white/85 px-2.5 py-1 text-xs font-semibold text-meadow-700 backdrop-blur">
-          {localized(product.bird, "name", locale)}
+          {bird}
         </span>
         {product.featured && (
           <span className="absolute end-3 top-3 grid size-7 place-items-center rounded-full bg-yolk-400 text-bark-900" title={t("featured")}>
@@ -33,7 +35,7 @@ export async function ProductCard({ product }: { product: ProductWithBird }) {
       </div>
       <div className="flex flex-1 flex-col gap-1 p-4">
         <h3 className="font-display text-lg font-semibold leading-snug">
-          {localized(product, "breed", locale)}
+          {breed}
         </h3>
         <p className="line-clamp-2 text-sm text-bark-500">
           {localized(product, "description", locale)}

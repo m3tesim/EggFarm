@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { EggArt } from "@/components/egg-art";
+import { BirdPhoto } from "@/components/bird-photo";
 import { Link } from "@/i18n/navigation";
 import { requireAdmin } from "@/lib/admin-auth";
 import { db } from "@/lib/db";
@@ -47,7 +47,15 @@ export default async function AdminProductsPage({ params, searchParams }: PagePr
               <tr key={p.id}>
                 <td className="p-3">
                   <div className="flex items-center gap-3">
-                    <EggArt color={p.shellColor} speckled={p.speckled} seed={p.slug} className="h-8" />
+                    <span className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-cream-100">
+                      <BirdPhoto
+                        src={p.imageUrl}
+                        alt=""
+                        sizes="40px"
+                        fallback={{ color: p.shellColor, speckled: p.speckled, seed: p.slug }}
+                        eggClassName="h-7"
+                      />
+                    </span>
                     <span className="font-medium">{localized(p, "breed", locale)}</span>
                   </div>
                 </td>

@@ -14,5 +14,6 @@ export function toCartProduct(p: Product): CartProduct {
     stock: p.stock,
     shellColor: p.shellColor,
     speckled: p.speckled,
+    imageUrl: p.imageUrl,
   };
 }

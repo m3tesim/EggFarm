@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { AddToCart } from "@/components/add-to-cart";
-import { EggArt } from "@/components/egg-art";
+import { BirdPhoto } from "@/components/bird-photo";
 import { ProductCard } from "@/components/product-card";
 import { Link } from "@/i18n/navigation";
 import { formatMoney, localized } from "@/lib/format";
@@ -35,6 +35,7 @@ export default async function ProductPage({ params }: PageProps<"/[locale]/eggs/
     getRelatedProducts(product.birdId, product.id),
   ]);
   const birdName = localized(product.bird, "name", locale);
+  const breed = localized(product, "breed", locale);
 
   const stats = [
     { icon: Percent, label: t("hatchRate"), value: `${product.hatchRate}%` },
@@ -55,15 +56,29 @@ export default async function ProductPage({ params }: PageProps<"/[locale]/eggs/
       </Link>
 
       <div className="mt-6 grid gap-10 lg:grid-cols-2">
-        <div className="card relative grid aspect-square place-items-center overflow-hidden bg-gradient-to-br from-cream-100 via-cream-200 to-yolk-300/40">
-          <div className="absolute h-1/2 w-2/3 translate-y-1/4 rounded-[50%] bg-bark-900/10 blur-2xl" />
-          <EggArt
-            color={product.shellColor}
-            speckled={product.speckled}
-            seed={product.slug}
-            className="relative h-3/5"
-          />
-        </div>
+        <figure>
+          <div className="card relative aspect-square overflow-hidden bg-gradient-to-br from-cream-100 via-cream-200 to-yolk-300/40">
+            <BirdPhoto
+              src={product.imageUrl}
+              alt={t("photoAlt", { breed, bird: birdName })}
+              priority
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              fallback={{ color: product.shellColor, speckled: product.speckled, seed: product.slug }}
+            />
+          </div>
+          {product.imageUrl && product.imageSourceUrl && (
+            <figcaption className="mt-2 text-xs text-bark-500">
+              <a
+                href={product.imageSourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-bark-500/40 underline-offset-2 hover:text-bark-900"
+              >
+                {t("photoCredit")}
+              </a>
+            </figcaption>
+          )}
+        </figure>
 
         <div className="flex flex-col">
           <Link
@@ -73,7 +88,7 @@ export default async function ProductPage({ params }: PageProps<"/[locale]/eggs/
             {birdName}
           </Link>
           <h1 className="mt-3 font-display text-4xl font-semibold leading-tight md:text-5xl">
-            {localized(product, "breed", locale)}
+            {breed}
           </h1>
           <p className="mt-4 text-2xl font-bold text-meadow-700">
             {formatMoney(product.priceCents, locale)}{" "}

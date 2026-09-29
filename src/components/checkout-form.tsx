@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { type CheckoutField, type CheckoutState, placeOrder } from "@/lib/actions/orders";
 import { useCart, useCartHydrated } from "@/lib/cart-store";
 import { formatMoney } from "@/lib/format";
-import { EggArt } from "./egg-art";
+import { BirdPhoto } from "./bird-photo";
 import { OrderTotals } from "./order-summary";
 
 export function CheckoutForm() {
@@ -114,8 +114,14 @@ export function CheckoutForm() {
         <ul className="space-y-3">
           {items.map((item) => (
             <li key={item.productId} className="flex items-center gap-3 text-sm">
-              <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-cream-100">
-                <EggArt color={item.shellColor} speckled={item.speckled} seed={item.slug} className="h-8" />
+              <span className="relative size-12 shrink-0 overflow-hidden rounded-xl bg-cream-100">
+                <BirdPhoto
+                  src={item.imageUrl}
+                  alt=""
+                  sizes="48px"
+                  fallback={{ color: item.shellColor, speckled: item.speckled, seed: item.slug }}
+                  eggClassName="h-8"
+                />
               </span>
               <span className="flex-1">
                 <span className="block font-medium">{locale === "ar" ? item.breedAr : item.breedEn}</span>

@@ -35,11 +35,12 @@ export async function getBirds() {
     orderBy: { sortOrder: "asc" },
     include: {
       _count: { select: { products: { where: { active: true } } } },
+      // A representative breed, preferring one that has a photo.
       products: {
         where: { active: true },
-        orderBy: [{ featured: "desc" }, { createdAt: "asc" }],
+        orderBy: [{ imageUrl: { sort: "desc", nulls: "last" } }, { featured: "desc" }, { createdAt: "asc" }],
         take: 1,
-        select: { shellColor: true, speckled: true, slug: true },
+        select: { shellColor: true, speckled: true, slug: true, imageUrl: true },
       },
     },
   });

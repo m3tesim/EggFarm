@@ -8,7 +8,7 @@ import { refreshCartProducts } from "@/lib/actions/cart";
 import { syncCart, useCart, useCartHydrated } from "@/lib/cart-store";
 import { storeConfig } from "@/lib/config";
 import { formatMoney } from "@/lib/format";
-import { EggArt } from "./egg-art";
+import { BirdPhoto } from "./bird-photo";
 import { OrderTotals } from "./order-summary";
 import { QuantityStepper } from "./quantity-stepper";
 
@@ -51,9 +51,15 @@ export function CartView() {
             <li key={item.productId} className="flex flex-wrap items-center gap-4 p-4 sm:flex-nowrap">
               <Link
                 href={`/eggs/${item.slug}`}
-                className="grid size-20 shrink-0 place-items-center rounded-2xl bg-cream-100"
+                className="relative size-20 shrink-0 overflow-hidden rounded-2xl bg-cream-100"
               >
-                <EggArt color={item.shellColor} speckled={item.speckled} seed={item.slug} className="h-14" />
+                <BirdPhoto
+                  src={item.imageUrl}
+                  alt={name}
+                  sizes="80px"
+                  fallback={{ color: item.shellColor, speckled: item.speckled, seed: item.slug }}
+                  eggClassName="h-14"
+                />
               </Link>
               <div className="min-w-0 flex-1">
                 <Link href={`/eggs/${item.slug}`} className="font-semibold hover:text-meadow-700">

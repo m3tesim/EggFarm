@@ -42,6 +42,8 @@ export default async function EditProductPage({ params }: PageProps<"/[locale]/a
           minOrder: product.minOrder,
           hatchRate: product.hatchRate,
           shellColor: product.shellColor,
+          imageUrl: product.imageUrl,
+          imageSourceUrl: product.imageSourceUrl,
           speckled: product.speckled,
           featured: product.featured,
           active: product.active,

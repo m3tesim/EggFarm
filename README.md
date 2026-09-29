@@ -9,6 +9,9 @@ pigeons and peafowl.
 - **Shop** with search (matches English *and* Arabic breed names/descriptions), filtering by
   bird type (multi-select) and price range, in-stock toggle, sorting and pagination. All
   filter state lives in the URL, so results are shareable.
+- **Real bird photos** loaded from Wikimedia Commons, each credited with a link to its
+  Commons page (author & licence). If a photo is missing or fails to load, an SVG egg in the
+  breed's shell colour is shown instead. Admins can set any https photo URL per product.
 - **Product pages** with fertility rate, incubation period, shell colour, min. order and stock.
 - **Cart** (persisted in the browser, re-synced with live prices/stock from the server).
 - **Checkout** (cash on delivery) via a Server Action: Zod validation, prices recomputed on
@@ -76,6 +79,15 @@ src/proxy.ts          locale detection & redirects (Next 16 "proxy", formerly mi
 
 Store settings (currency, shipping fee, free-shipping threshold, contact info) live in
 `src/lib/config.ts`.
+
+## Photos
+
+Breed photos are hot-linked from [Wikimedia Commons](https://commons.wikimedia.org) via
+`Special:FilePath/<file>?width=800`, which serves a resized copy. The file names live in
+`prisma/seed.ts`. They are freely licensed (mostly CC BY / CC BY-SA), which requires
+attribution: the product page links each photo to its Commons page, which shows the author
+and licence. The Texas A&M quail has no suitable free photo yet, so it shows the egg
+illustration.
 
 ## Going to production
 

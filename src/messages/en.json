@@ -86,7 +86,9 @@
     "featured": "Farm favourite",
     "speckled": "Speckled",
     "plain": "Plain",
-    "lineTotal": "Total"
+    "lineTotal": "Total",
+    "photoCredit": "Photo: Wikimedia Commons",
+    "photoAlt": "{breed} — {bird}"
   },
   "Cart": {
     "title": "Your cart",
@@ -206,7 +208,10 @@
     "items": "Items",
     "bird": "Bird",
     "search": "Search orders…",
-    "all": "All"
+    "all": "All",
+    "imageUrl": "Photo URL",
+    "imageSourceUrl": "Photo credit page (author & licence)",
+    "imageHint": "Paste a direct image link, e.g. from Wikimedia Commons."
   },
   "Footer": {
     "about": "A family farm raising healthy domestic birds and shipping fertile hatching eggs.",

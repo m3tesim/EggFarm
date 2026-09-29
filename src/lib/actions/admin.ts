@@ -62,6 +62,14 @@ export async function updateOrderStatus(formData: FormData) {
   revalidatePath("/[locale]/admin", "layout");
 }
 
+/** Optional https link; empty input clears the field. */
+const httpsUrl = z
+  .string()
+  .trim()
+  .max(1000)
+  .transform((v) => v || null)
+  .pipe(z.url({ protocol: /^https$/ }).nullable());
+
 const productSchema = z.object({
   id: z.string().optional(),
   birdId: z.string().min(1),
@@ -80,6 +88,8 @@ const productSchema = z.object({
   minOrder: z.coerce.number().int().min(1).max(500),
   hatchRate: z.coerce.number().int().min(0).max(100),
   shellColor: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+  imageUrl: httpsUrl,
+  imageSourceUrl: httpsUrl,
   speckled: z.boolean(),
   featured: z.boolean(),
   active: z.boolean(),
